@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fixture — test 2 (odpowiedzi ukryte)</title>
+    <style>
+      .answers[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <article class="question">
+      <h2 class="question-text">Ile bitów ma adres IPv6?</h2>
+      <button class="show-answer" type="button">Pokaż rozwiązanie</button>
+      <ul class="answers" hidden>
+        <li class="answer">32</li>
+        <li class="answer">64</li>
+        <li class="answer is-correct">128</li>
+      </ul>
+    </article>
+
+    <!-- Duplikat pytania z quiz-1 — sprawdza deduplikację po id -->
+    <article class="question">
+      <h2 class="question-text">Który protokół działa w warstwie transportowej?</h2>
+      <button class="show-answer" type="button">Pokaż rozwiązanie</button>
+      <ul class="answers" hidden>
+        <li class="answer">IP</li>
+        <li class="answer is-correct">TCP</li>
+        <li class="answer">HTTP</li>
+      </ul>
+    </article>
+
+    <script>
+      for (const button of document.querySelectorAll('.show-answer')) {
+        button.addEventListener('click', () => {
+          button.parentElement.querySelector('.answers').hidden = false;
+        });
+      }
+    </script>
+  </body>
+</html>

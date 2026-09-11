@@ -1,0 +1,27 @@
+{
+  "name": "fixture (smoke test)",
+  "baseUrl": "file://",
+  "login": {
+    "mode": "manual",
+    "url": "about:blank"
+  },
+  "listing": {
+    "startUrls": ["FIXTURES/listing.html"],
+    "itemLinkSelector": "a.quiz-link",
+    "maxPages": 2
+  },
+  "question": {
+    "containerSelector": "article.question",
+    "textSelector": ".question-text",
+    "answerSelector": "li.answer",
+    "correctAnswerSelector": "li.answer.is-correct",
+    "explanationSelector": ".explanation",
+    "revealSelector": "button.show-answer"
+  },
+  "crawl": {
+    "delayMs": 50,
+    "timeoutMs": 15000,
+    "headless": true,
+    "waitUntil": "load"
+  }
+}

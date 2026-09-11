@@ -1,0 +1,39 @@
+{
+  "_uwaga": "Szablon pod quiz ze screenów (odtwarzacz kursu: rozdziały po lewej, CONFIRM → NEXT). Pola oznaczone TODO do potwierdzenia po `npm run probe`.",
+
+  "name": "CBAP Exam Simulator",
+  "baseUrl": "https://TODO-adres-szkoly",
+  "mode": "interactive",
+
+  "login": {
+    "mode": "manual",
+    "url": "https://TODO-adres-szkoly/users/sign_in"
+  },
+
+  "listing": {
+    "_komentarz": "startUrls = pierwsza lekcja-quiz; itemLinkSelector zbiera z sidebaru linki do pozostałych quizów.",
+    "startUrls": ["https://TODO-adres-szkoly/courses/take/TODO-kurs/quizzes/TODO-id"],
+    "itemLinkSelector": "a[href*='/quizzes/']",
+    "maxPages": 1
+  },
+
+  "interactive": {
+    "questionTextSelector": "TODO — nagłówek z treścią pytania",
+    "optionSelector": "TODO — pojedynczy wiersz A/B/C/D",
+    "quizTitleSelector": "TODO — nagłówek „BABoK Terms Questions”",
+    "retakeButton": "role=button[name=/retake|try again/i]",
+
+    "_komentarz": "Wartości domyślne (można pominąć): confirmButton, nextButton, verdictSelector, correctVerdictPattern, counterSelector. Jedno z dwóch poniżej pozwala rozstrzygnąć złą odpowiedź w jednym podejściu.",
+    "correctOptionSelector": "TODO (opcjonalnie) — opcja podświetlona na zielono po CONFIRM",
+    "explanationCorrectPattern": "TODO (opcjonalnie) — np. correct answer is ([A-D])\\b",
+
+    "maxPasses": 3
+  },
+
+  "crawl": {
+    "delayMs": 1500,
+    "timeoutMs": 30000,
+    "headless": true,
+    "waitUntil": "domcontentloaded"
+  }
+}

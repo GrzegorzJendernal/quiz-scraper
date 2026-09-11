@@ -1,0 +1,38 @@
+{
+  "name": "przyklad",
+  "baseUrl": "https://example.com",
+
+  "login": {
+    "mode": "manual",
+    "url": "https://example.com/login",
+
+    "_komentarz": "Poniższe pola potrzebne tylko przy mode = 'auto' (dane z .env).",
+    "usernameSelector": "#email",
+    "passwordSelector": "#password",
+    "submitSelector": "button[type='submit']",
+    "successUrlPattern": "**/dashboard**"
+  },
+
+  "listing": {
+    "startUrls": ["https://example.com/quizzes"],
+    "itemLinkSelector": "a.quiz-link",
+    "nextPageSelector": "a[rel='next']",
+    "maxPages": 50
+  },
+
+  "question": {
+    "containerSelector": ".question",
+    "textSelector": ".question-text",
+    "answerSelector": ".answer",
+    "correctAnswerSelector": ".answer.is-correct",
+    "explanationSelector": ".explanation",
+    "revealSelector": "button.show-answer"
+  },
+
+  "crawl": {
+    "delayMs": 1200,
+    "timeoutMs": 30000,
+    "headless": true,
+    "waitUntil": "domcontentloaded"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "fixture interactive (smoke test)",
+  "baseUrl": "file://",
+  "mode": "interactive",
+  "login": {
+    "mode": "manual",
+    "url": "about:blank"
+  },
+  "listing": {
+    "startUrls": ["FIXTURES/interactive-quiz.html?reveal=REVEAL"],
+    "maxPages": 1
+  },
+  "interactive": {
+    "questionTextSelector": "h2.question-title",
+    "optionSelector": ".option",
+    "retakeButton": "role=button[name=/retake/i]",
+    "quizTitleSelector": "h1.lesson-title",
+    "maxPasses": 5
+  },
+  "crawl": {
+    "delayMs": 0,
+    "timeoutMs": 10000,
+    "headless": true,
+    "waitUntil": "load"
+  }
+}

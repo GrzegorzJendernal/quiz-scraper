@@ -1,0 +1,32 @@
+{
+  "name": "quiz-scraper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Lokalny scraper pytań i poprawnych odpowiedzi (Playwright) — dane trzymane offline w JSON.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "setup": "tsx src/cli/setup.ts",
+    "login": "tsx src/cli/login.ts",
+    "inspect": "tsx src/cli/inspect.ts",
+    "probe": "tsx src/cli/probe.ts",
+    "check": "tsx src/cli/check.ts",
+    "scrape": "tsx src/cli/scrape.ts",
+    "stats": "tsx src/cli/stats.ts",
+    "smoke": "tsx src/cli/smoke.ts",
+    "lint": "eslint . --quiet",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.10.0",
+    "playwright": "^1.56.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.70.0"
+  }
+}

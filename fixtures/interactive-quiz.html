@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Fixture — interactive quiz</title>
+    <!--
+      Odwzorowanie przepływu z odtwarzacza kursu: jedno pytanie na ekranie,
+      zaznacz → CONFIRM → werdykt + wyjaśnienie → NEXT, na końcu ekran wyników z „Retake quiz”.
+
+      ?reveal=marker  po złej odpowiedzi poprawna opcja dostaje klasę .is-correct
+      ?reveal=text    po złej odpowiedzi wyjaśnienie zaczyna się od „The correct answer is X.”
+      ?reveal=none    tylko werdykt — poprawną trzeba wydedukować w kolejnych podejściach
+
+      Na parzystych podejściach kolejność odpowiedzi jest odwrócona (jak tasowanie na prawdziwej stronie).
+    -->
+    <style>
+      body { font-family: Georgia, serif; margin: 0; display: grid; grid-template-columns: 280px 1fr; }
+      aside { background: #f3f4f6; padding: 1rem; min-height: 100vh; }
+      main { padding: 2rem; max-width: 720px; }
+      .option { display: flex; border: 1px solid #ddd; margin: .5rem 0; cursor: pointer; }
+      .option .letter { width: 3rem; background: #d4d4de; display: flex; align-items: center; justify-content: center; }
+      .option .option-text { padding: 1rem; }
+      .option.selected .letter { background: #2f2e41; color: #fff; }
+      .option.is-correct .letter { background: #2e9e44; color: #fff; }
+      .feedback { background: #f3f4f6; padding: 1rem; margin: 1rem 0; }
+    </style>
+  </head>
+  <body>
+    <aside>
+      <h2>Fixture Exam Simulator</h2>
+      <a href="#">Fixture Terms Questions</a>
+    </aside>
+    <main>
+      <h1 class="lesson-title">Fixture Terms Questions</h1>
+      <div id="quiz"></div>
+    </main>
+
+    <script>
+      const QUESTIONS = [
+        {
+          text: 'What does HTTP stand for?',
+          options: ['HyperText Transfer Protocol', 'High Transfer Text Protocol', 'HyperText Transport Program', 'Hosted Text Transfer Process'],
+          correct: 'HyperText Transfer Protocol',
+          why: 'HTTP is the HyperText Transfer Protocol.',
+        },
+        {
+          text: 'Which data structure uses FIFO order?',
+          options: ['Stack', 'Tree', 'Queue', 'Heap'],
+          correct: 'Queue',
+          why: 'A queue removes elements in the order they were added.',
+        },
+        {
+          text: 'Which HTTP status code means Not Found?',
+          options: ['200', '301', '500', '404'],
+          correct: '404',
+          why: '404 signals that the resource does not exist.',
+        },
+      ];
+
+      const reveal = new URLSearchParams(location.search).get('reveal') ?? 'none';
+      const key = `fixture-quiz-${reveal}`;
+      const memory = {};
+      const load = () => {
+        try { return JSON.parse(localStorage.getItem(key)) ?? { attempt: 1, done: false }; }
+        catch { return memory[key] ?? { attempt: 1, done: false }; }
+      };
+      const save = (state) => {
+        try { localStorage.setItem(key, JSON.stringify(state)); } catch { memory[key] = state; }
+      };
+
+      const root = document.getElementById('quiz');
+      let state = load();
+      let index = 0;
+
+      function renderResults() {
+        root.innerHTML = '<p>Quiz complete.</p><button type="button" class="retake">Retake quiz</button>';
+        root.querySelector('.retake').addEventListener('click', () => {
+          state = { attempt: state.attempt + 1, done: false };
+          save(state);
+          index = 0;
+          renderQuestion();
+        });
+      }
+
+      function renderQuestion() {
+        const q = QUESTIONS[index];
+        const ordered = state.attempt % 2 === 0 ? [...q.options].reverse() : q.options;
+        const letters = 'ABCD';
+        let selected = null;
+
+        root.innerHTML = `
+          <p class="counter">QUESTION ${index + 1} OF ${QUESTIONS.length}</p>
+          <h2 class="question-title">${q.text}</h2>
+          <p>Choose only ONE best answer.</p>
+          <div class="options">
+            ${ordered.map((o, i) => `<div class="option" role="button" tabindex="0"><div class="letter">${letters[i]}</div><div class="option-text">${o}</div></div>`).join('')}
+          </div>
+          <div class="feedback" hidden><p class="verdict"></p><p class="explanation"></p></div>
+          <button type="button" class="confirm" disabled>CONFIRM</button>
+          <button type="button" class="next" hidden>NEXT</button>`;
+
+        const optionEls = [...root.querySelectorAll('.option')];
+        const confirm = root.querySelector('.confirm');
+        const next = root.querySelector('.next');
+
+        optionEls.forEach((el, i) => el.addEventListener('click', () => {
+          if (!confirm.hidden) {
+            optionEls.forEach((o) => o.classList.remove('selected'));
+            el.classList.add('selected');
+            selected = ordered[i];
+            confirm.disabled = false;
+          }
+        }));
+
+        confirm.addEventListener('click', () => {
+          const ok = selected === q.correct;
+          const correctLetter = letters[ordered.indexOf(q.correct)];
+          const feedback = root.querySelector('.feedback');
+          feedback.querySelector('.verdict').textContent = ok ? 'This answer is correct.' : 'This answer is incorrect.';
+          feedback.querySelector('.explanation').textContent =
+            !ok && reveal === 'text' ? `The correct answer is ${correctLetter}. ${q.why}` : q.why;
+          if (ok || reveal === 'marker') optionEls[ordered.indexOf(q.correct)].classList.add('is-correct');
+          feedback.hidden = false;
+          confirm.hidden = true;
+          next.hidden = false;
+        });
+
+        next.addEventListener('click', () => {
+          index += 1;
+          if (index < QUESTIONS.length) {
+            renderQuestion();
+          } else {
+            state.done = true;
+            save(state);
+            renderResults();
+          }
+        });
+      }
+
+      if (state.done) renderResults(); else renderQuestion();
+    </script>
+  </body>
+</html>
